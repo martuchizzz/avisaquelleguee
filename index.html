@@ -486,6 +486,106 @@
       </div>
     </div>
   </div>
+  <!-- Firebase -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, getDocs, orderBy, query, deleteDoc, doc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCJ0Uy1ljFttJIcOk-bsfNgLvGdUYdp7Cs",
+    authDomain: "avisa-que-llegue.firebaseapp.com",
+    projectId: "avisa-que-llegue",
+    storageBucket: "avisa-que-llegue.firebasestorage.app",
+    messagingSenderId: "182825332812",
+    appId: "1:182825332812:web:1b92fe48a6c755b1e904e9",
+    measurementId: "G-RZPM3RNWGF"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // Cargar comentarios
+  async function cargarComentarios() {
+    const q = query(collection(db, "comentarios"), orderBy("fecha", "desc"));
+    const snapshot = await getDocs(q);
+    const contenedor = document.getElementById("comentariosLista");
+    contenedor.innerHTML = "";
+    snapshot.forEach(docSnap => {
+      const d = docSnap.data();
+      const div = document.createElement("div");
+      div.className = "comentario-card";
+      div.innerHTML = `
+        <div class="comentario-header">
+          <span class="comentario-nombre">${d.nombre}</span>
+          <span class="comentario-fecha">${new Date(d.fecha?.toDate()).toLocaleDateString('es-AR')}</span>
+        </div>
+        <p class="comentario-texto">${d.texto}</p>
+        <div class="comentario-acciones">
+          <button class="btn-like" data-id="${docSnap.id}">❤️ ${d.likes || 0}</button>
+          <button class="btn-eliminar" data-id="${docSnap.id}">🗑️ Eliminar</button>
+        </div>
+        <div class="respuestas-wrap" id="resp-${docSnap.id}"></div>
+        <button class="btn-responder" data-id="${docSnap.id}">💬 Responder</button>
+        <div class="respuesta-form hidden" id="form-resp-${docSnap.id}">
+          <input type="text" placeholder="Tu nombre" class="resp-nombre" />
+          <textarea placeholder="Tu respuesta..." class="resp-texto" rows="2"></textarea>
+          <button class="btn-enviar-resp" data-id="${docSnap.id}">Enviar respuesta</button>
+        </div>
+      `;
+      contenedor.appendChild(div);
+    });
+
+    // Likes
+    document.querySelectorAll('.btn-like').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        await updateDoc(doc(db, "comentarios", btn.dataset.id), { likes: increment(1) });
+        cargarComentarios();
+      });
+    });
+
+    // Eliminar
+    document.querySelectorAll('.btn-eliminar').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        if (confirm('¿Eliminar este comentario?')) {
+          await deleteDoc(doc(db, "comentarios", btn.dataset.id));
+          cargarComentarios();
+        }
+      });
+    });
+
+    // Responder
+    document.querySelectorAll('.btn-responder').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.getElementById('form-resp-' + btn.dataset.id).classList.toggle('hidden');
+      });
+    });
+
+    // Enviar respuesta
+    document.querySelectorAll('.btn-enviar-resp').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const form = document.getElementById('form-resp-' + btn.dataset.id);
+        const nombre = form.querySelector('.resp-nombre').value.trim();
+        const texto = form.querySelector('.resp-texto').value.trim();
+        if (!nombre || !texto) return;
+        await addDoc(collection(db, "comentarios", btn.dataset.id, "respuestas"), {
+          nombre, texto, fecha: new Date()
+        });
+        form.classList.add('hidden');
+        cargarComentarios();
+      });
+    });
+  }
+
+  // Guardar comentario nuevo
+  window.guardarComentario = async function(nombre, texto) {
+    await addDoc(collection(db, "comentarios"), {
+      nombre, texto, likes: 0, fecha: new Date()
+    });
+    cargarComentarios();
+  };
+
+  cargarComentarios();
+</script>
   <!-- JavaScript propio -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
