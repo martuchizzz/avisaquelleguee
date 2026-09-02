@@ -330,12 +330,12 @@
         <form id="commentForm" action="https://formspree.io/f/mzdnqqbk" method="POST" novalidate>
           <div class="form-group">
             <label for="userName">Tu nombre</label>
-            <input type="text" id="userName" placeholder="¿Cómo te llamás?" autocomplete="off" />
+           <input type="text" id="userName" name="nombre" placeholder="¿Cómo te llamás?" autocomplete="off" />
             <span class="form-error" id="errorNombre"></span>
           </div>
           <div class="form-group">
             <label for="userComment">Tu consejo o experiencia</label>
-            <textarea id="userComment" placeholder="Compartí lo que aprendiste viajando..." rows="5"></textarea>
+            <textarea id="userComment" name="consejo" placeholder="Compartí lo que aprendiste viajando..." rows="5"></textarea>
             <span class="form-error" id="errorComentario"></span>
           </div>
           <button type="submit" class="btn-submit">Enviar →</button>
