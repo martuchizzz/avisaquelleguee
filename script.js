@@ -208,7 +208,6 @@ document.getElementById('getLocationBtn').addEventListener('click', () => {
 // ── FORMULARIO DE COMENTARIOS ──
 // Formulario
 document.getElementById('commentForm').addEventListener('submit', function(e) {
-  e.preventDefault();
   const name = document.getElementById('userName').value.trim();
   const comment = document.getElementById('userComment').value.trim();
   let valid = true;
@@ -216,9 +215,8 @@ document.getElementById('commentForm').addEventListener('submit', function(e) {
   document.getElementById('errorComentario').textContent = '';
   if (!name) { document.getElementById('errorNombre').textContent = 'Por favor, ingresá tu nombre.'; valid = false; }
   if (!comment) { document.getElementById('errorComentario').textContent = 'Por favor, escribí tu consejo.'; valid = false; }
-  if (valid) {
-    this.style.display = 'none';
-    document.getElementById('formSuccess').classList.remove('hidden');
+  if (!valid) {
+    e.preventDefault();
   }
 });
 // CENTROS DE ATENCIÓN A LA MUJER
