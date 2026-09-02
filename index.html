@@ -523,13 +523,14 @@
       const d = docSnap.data();
       const div = document.createElement("div");
       div.className = "comentario-card";
-      div.innerHTML = `
+     div.innerHTML = `
   <div class="comentario-header">
     <div class="comentario-avatar">${d.nombre.charAt(0).toUpperCase()}</div>
     <div class="comentario-info">
       <span class="comentario-nombre">${d.nombre}</span>
       <span class="comentario-fecha">${new Date(d.fecha?.toDate()).toLocaleDateString('es-AR')}</span>
     </div>
+  </div>
   </div>
         <p class="comentario-texto">${d.texto}</p>
         <div class="comentario-acciones">
