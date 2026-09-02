@@ -223,6 +223,7 @@ document.getElementById('commentForm').addEventListener('submit', function(e) {
       body: new FormData(this)
     }).then(response => {
       if (response.ok) {
+        window.guardarComentario(name, comment);
         this.style.display = 'none';
         document.getElementById('formSuccess').classList.remove('hidden');
       }
