@@ -894,50 +894,20 @@ if (document.getElementById('mapa')) {
     }).addTo(mapa).bindPopup(`<strong>${lugar.nombre}</strong>`);
   });
 }
-// ── CARRUSEL COMENTARIOS ESTILO TESTIMONIALS ──
-function initCarruselComentarios() {
-  const wrap = document.getElementById('comentariosLista');
-  const dotsWrap = document.getElementById('comentariosDots');
-  if (!wrap) return;
-  const cards = Array.from(wrap.querySelectorAll('.comentario-card'));
-  if (cards.length === 0) return;
-
-  let current = 0;
-  dotsWrap.innerHTML = '';
-
-  // Crear dots
-  cards.forEach((_, i) => {
-    const dot = document.createElement('div');
-    dot.className = 'comentarios-dot' + (i === 0 ? ' active' : '');
-    dot.addEventListener('click', () => goToComentario(i));
-    dotsWrap.appendChild(dot);
+// ── MOUSE EFFECT EN COMENTARIOS ──
+document.addEventListener('mousemove', function(e) {
+  document.querySelectorAll('.comentario-card').forEach(card => {
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const rotateX = (y - centerY) / 15;
+    const rotateY = (centerX - x) / 15;
+    if (x > 0 && x < rect.width && y > 0 && y < rect.height) {
+      card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(8px)`;
+    } else {
+      card.style.transform = 'perspective(800px) rotateX(0) rotateY(0) translateZ(0)';
+    }
   });
-
-  function goToComentario(idx) {
-    current = (idx + cards.length) % cards.length;
-    const prev = (current - 1 + cards.length) % cards.length;
-    const next = (current + 1) % cards.length;
-
-    cards.forEach((card, i) => {
-      card.classList.remove('active', 'side', 'hidden-card');
-      if (i === current) {
-        card.classList.add('active');
-      } else if (i === prev || i === next) {
-        card.classList.add('side');
-      } else {
-        card.classList.add('hidden-card');
-      }
-    });
-
-    document.querySelectorAll('.comentarios-dot').forEach((d, i) => {
-      d.classList.toggle('active', i === current);
-    });
-  }
-
-  goToComentario(0);
-
-  document.getElementById('comentariosPrev')
-    .addEventListener('click', () => goToComentario(current - 1));
-  document.getElementById('comentariosNext')
-    .addEventListener('click', () => goToComentario(current + 1));
-}
+});
