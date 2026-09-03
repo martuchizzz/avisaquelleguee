@@ -917,5 +917,5 @@ window.addEventListener('load', () => {
     if (!currentUser) {
       openLogin();
     }
-  }, 1500);
+  }, 3000);
 });
