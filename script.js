@@ -911,3 +911,11 @@ document.addEventListener('mousemove', function(e) {
     }
   });
 });
+// ── POPUP DE BIENVENIDA ──
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    if (!currentUser) {
+      openLogin();
+    }
+  }, 1500);
+});
