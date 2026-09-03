@@ -1232,3 +1232,16 @@ box-shadow:0 10px 20px rgba(168,85,247,.35);
   padding-left: 1rem;
   border-left: 3px solid var(--lavender);
 }
+/* ── GRILLA COMENTARIOS 2 COLUMNAS ── */
+#comentariosLista {
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+@media (max-width: 768px) {
+  #comentariosLista {
+    grid-template-columns: 1fr;
+  }
+}
